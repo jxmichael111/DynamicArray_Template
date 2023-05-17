@@ -1,0 +1,167 @@
+#include <iostream>
+
+#include<stdlib.h>
+#include<time.h>
+using namespace std;
+
+template <typename T>
+class DynamicInterArray {
+    private:
+        T *data;
+        int size;
+    public:
+        DynamicInterArray(){
+            this->size = 0;
+            data = new T(0);
+        }
+        DynamicInterArray(T arr[], int size){
+            this->size = size;
+            data = new T[size];
+            for(int i = 0; i < size; i++)
+                data[i] = arr[i];
+        }
+        DynamicInterArray(const DynamicInterArray &o){
+            this->size = o.size;
+            data = new T(o.size);
+            for(int i = 0; i < o.size; i++)
+                data[i] = o.data[i];
+        }
+
+        void print() const{
+            cout << "[ ";
+            for(int i = 0; i < size; i++)
+                cout << data[i] << " | ";
+            cout << "]" <<endl;
+        }
+        ~DynamicInterArray(){
+            delete[] data;
+        }
+        void pushback(T value){
+            this->size = size+1;
+            T *newData = new T[size];
+            for(int i = 0; i < size-1; i++)
+                newData[i] = data[i];
+            newData[size-1] = value;
+            delete[] data;
+            data = newData;
+        }
+        void inser(T value, int pos){
+            this->size = size+1;
+            T *newData = new T[size];
+            for(int i = 0; i < size; i++){
+                if(i < pos)
+                    newData[i] = data[i];
+                else if(i == pos)
+                    newData[i] = value;
+                else
+                    newData[i] = data[i-1];
+            }
+            delete[] data;
+            data = newData;
+        }
+        void remov(int pos){
+            this->size = size-1;
+            T *newData = new T[size];
+            for(int i = 0; i < size; i++){
+                if(i < pos)
+                    newData[i] = data[i];
+                else
+                    newData[i] = data[i+1];
+            }
+            delete[] data;
+            data = newData;
+        }
+};
+
+// clase numero complejo
+class complex {
+
+    public:
+        int real;
+        int imaginary;
+
+        complex(){
+            real = rand()%(11-1);
+            imaginary = rand()%(11-1);
+        }
+
+};
+// sobrecarga del operador << para la clase complex
+ostream& operator<<(ostream& output, const complex& number){
+    output << number.real << " + " << number.imaginary<<"i";
+    return output;
+}
+
+
+
+int main()
+{
+    // implementacion para objetos de tipo enteros
+
+    int arr1[3] = {1,2,3};
+    DynamicInterArray<int> A(arr1,3);
+    A.print();
+    cout<<" ***PUSHBACK*** "<<endl;
+    A.pushback(7);
+    A.print();
+    cout<<" ***INSERT*** "<<endl;
+    A.inser(8,1);
+    A.print();
+    cout<<" ***REMOVE*** "<<endl;
+    A.remov(1);
+    A.print();
+    
+    cout<<"\n////////////////////////////////////\n"<<endl;
+
+    // implementacion para objetos de tipo char
+
+    char arr2[3] = {'A','B','C'};
+    DynamicInterArray<char> B(arr2,3);
+    B.print();
+    cout<<" ***PUSHBACK*** "<<endl;
+    B.pushback('D');
+    B.print();
+    cout<<" ***INSERT*** "<<endl;
+    B.inser('M',1);
+    B.print();
+    cout<<" ***REMOVE*** "<<endl;
+    B.remov(1);
+    B.print();
+    cout<<"\n////////////////////////////////////\n"<<endl;
+
+    // implementacion para objetos de tipo string
+
+    string arr3[2] = {"Michael","Ticona"};
+    DynamicInterArray<string> C(arr3,2);
+    C.print();
+    cout<<" ***PUSHBACK*** "<<endl;
+    C.pushback("Larico");
+    C.print();
+    cout<<" ***INSERT*** "<<endl;
+    C.inser("Jarnie",1);
+    C.print();
+    cout<<" ***REMOVE*** "<<endl;
+    C.remov(1);
+    C.print();
+
+    // implementacion para objetos de tipo complex
+
+    complex value;
+    complex value2;
+    complex value3;
+    complex arr4[2] ={value,value2};
+
+    DynamicInterArray<complex> D(arr4,2);
+    D.print();
+    cout<<" ***PUSHBACK*** "<<endl;
+    D.pushback(value3);
+    D.print();
+    cout<<" ***INSERT*** "<<endl;
+    D.inser(value3,1);
+    D.print();
+    cout<<" ***REMOVE*** "<<endl;
+    D.remov(1);
+    D.print();
+
+    return 0;
+}
